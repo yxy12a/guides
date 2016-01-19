@@ -17,7 +17,7 @@ sudo /etc/init.d/influxdb start
 apt-get install postgresql
 sudo /etc/init.d/postgresql start
 sudo -u postgres psql 
-> CREATE DATABASE gnocchi LC_COLLATE C LC_CTYPE;
+> CREATE DATABASE gnocchi;
 > CREATE USER gnocchi;
 > ALTER USER gnocchi PASSWORD 'gnocchi';
 > GRANT ALL PRIVILEGES ON DATABASE gnocchi to gnocchi;
