@@ -137,6 +137,8 @@ refer to ceilometer source code to add /etc/ceilometer/gnocchi_resources.yaml
 ## Configuring CORS for Gnocchi and Keystone
 https://blog.sileht.net/configuring-cors-for-gnocchi-and-keystone.html
 
+## grafana query example
+Query:  {"=":{"display_name": "test1"} }
 
 
 #############################################################################################################
