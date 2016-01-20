@@ -65,6 +65,7 @@ openstack service create --name gnocchi --description "OpenStack Metric Service"
 openstack endpoint create --region RegionOne metric public http://controller:8041
 openstack endpoint create --region RegionOne metric admin http://controller:8041
 openstack endpoint create --region RegionOne metric internal http://controller:8041
+# Note: It seems that there is an issue of grafana that can't parse controller, so here using controller's IP instead.
 
 ## configuration for /etc/gnocchi/policy.json
 
