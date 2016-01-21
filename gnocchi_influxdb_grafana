@@ -137,6 +137,29 @@ refer to ceilometer source code to add /etc/ceilometer/gnocchi_resources.yaml
 ## Configuring CORS for Gnocchi and Keystone
 https://blog.sileht.net/configuring-cors-for-gnocchi-and-keystone.html
 
+## install gnocchi with apache2: This is not a must 
+atp-get install apache2 libapache2-mod-wsgi 
+mkdir /var/www/gnocchi
+cp /usr/local/lib/python2.7/dist-packages/gnocchi/rest/app.wsgi /var/www/gnocchi/
+
+## configuration for /etc/apache2/sites-available/gnocchi.conf
+Listen 8041
+
+<VirtualHost *:8041>
+    WSGIDaemonProcess gnocchi lang='en_US.UTF-8' locale='en_US.UTF-8' user=gnocchi display-name=%{GROUP} processes=9 threads=10
+    WSGIProcessGroup gnocchi
+    WSGIScriptAlias / /var/www/gnocchi/app.wsgi
+    WSGIApplicationGroup %{GLOBAL}
+    <IfVersion >= 2.4>
+        ErrorLogFormat "%{cu}t %M"
+    </IfVersion>
+    ErrorLog /var/log/apache2/gnocchi.log
+    CustomLog /var/log/apache2/gnocchi-access.log combined
+</VirtualHost>
+
+## enable gnocchi site 
+a2ensite gnocchi
+
 ## grafana query example
 Query:  {"=":{"display_name": "test1"} }
 
