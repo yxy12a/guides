@@ -163,6 +163,15 @@ a2ensite gnocchi
 ## grafana query example
 Query:  {"=":{"display_name": "test1"} }
 
+## issues list
+- server return 500 error(server overhead) when exec "gnocchi resource search --type instance --query "display_name=test1"
+  using apache2 wsgi + gnocchi_api to avoid this issue
+  
+- query error "AttributeError: 'unicode' object has no attribute 'utcoffset'" when add {"=":{"display_name": "test1"} } in grafana
+
+- query return null when exec "gnocchi resource search --type instance --query "display_name=compile-ceph"
+  this issue may be caused by '-' in the query??
+  
 
 #############################################################################################################
 source /opt/devstack/openrc admin admin
