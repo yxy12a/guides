@@ -50,7 +50,8 @@ deb https://packagecloud.io/grafana/stable/debian/ wheezy main
 curl https://packagecloud.io/gpg.key | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install grafana
-git clone http://github.com/sileht/grafana-plugins-gnocchi.git /opt/grafana-plugins
+# git clone http://github.com/sileht/grafana-plugins-gnocchi.git /opt/grafana-plugins
+git clone https://github.com/grafana/grafana-plugins.git /opt
 mkdir -p /usr/share/grafana/public/app/plugins/datasource/gnocchi
 mount -o bind /opt/grafana-plugins/datasources/gnocchi /usr/share/grafana/public/app/plugins/datasource/gnocchi
 service grafana-server restart
