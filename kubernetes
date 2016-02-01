@@ -1,0 +1,126 @@
+1. install docker on Host
+   apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+   edit /etc/apt/sources.list.d/docker.list:
+        deb https://apt.dockerproject.org/repo ubuntu-trusty main
+   apt-get update
+   apt-cache policy docker-engine
+   apt-get install docker-engine     
+   service docker start
+
+   
+2. install and run docker-registry
+   docker run -d -p 5000:5000 --net=host --restart=always --name registry registry
+   
+   Note: images are stored in /var/lib/registry/docker/registry/v2/repositories
+   
+   
+3. install and run etcd
+   docker pull ipolyzos/etcd
+   docker run --net=host -d ipolyzos/etcd:latest /go/bin/etcd --addr=127.0.0.1:4001 --bind-addr=0.0.0.0:4001 --data-dir=/var/etcd/data
+
+
+4. install and run the kubernetes master
+   docker run --name kube_master --net host -i -t ubuntu /bin/bash 
+   wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kube-apiserver
+   wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kube-controller-manager
+   wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kube-scheduler
+   chmod +x *
+   kube-apiserver --etcd-servers=http://127.0.0.1:4001 --service-cluster-ip-range=10.9.0.0/16 
+   kube-controller-manager --address=0.0.0.0 --master=127.0.0.1:8080
+   kube-scheduler --address=0.0.0.0 --master=127.0.0.1:8080
+    
+   Note: below services should be running on master
+         - kube-apiserver
+         - kube-controller-manager
+         - kube-scheduler 
+
+    
+5. install and run the kubernetes minion
+   
+   wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kubelet
+   wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kube-proxy
+   chmod +x *
+   kubelet --api-servers=127.0.0.1:8080 --pod-infra-container-image="docker.io/kubernetes/pause"
+   kube-proxy --master=127.0.0.1:8080
+      
+   Note: below services should be running on minion
+         - kubelet
+         - kube-proxy 
+         
+   两种方法使用docker-registry:
+   1). 直接在创建container的json文件中指定image路径为本地registry, 格式为[REGISTRYHOST/][USERNAME/]NAME[:TAG]
+       eg: "image": "172.27.35.35:5000/busybox"
+   2). 
+         
+         
+6. install kubectl
+   wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kubectl
+   chmod +x ./kubectl.1
+
+
+7. run docker in minion
+   edit /etc/default/docker:
+   DOCKER_OPTS="--insecure-registry 172.27.35.35:5000"  
+
+   
+8. create a pod
+   refer to http://kamalmarhubi.com/blog/2015/09/06/kubernetes-from-the-ground-up-the-api-server/
+   kubectl create -f nginx.json
+
+
+9. debug tips:
+   <<<<<<<<<<<<<<< etcd >>>>>>>>>>>>>>
+   etcdctl ls / --recursive
+   
+   
+   <<<<<<<<<<<<<<< docker >>>>>>>>>>>>
+   docker exec -it  container_id  sh
+   docker cp /opt/bin kube_master:/usr/local/bin
+   从你的本地环境中移除所有未使用的镜像：docker rmi -f $(docker images -q -a )
+
+   
+   <<<<<<<<<<<<<<< docker registry >>>
+   docker login
+   docker search localhost:5000
+   docker tag nginx 172.27.35.35:5000/nginx
+   docker push 172.27.35.35:5000/nginx
+   curl http://172.27.35.35:5000/v1/search?
+   curl -XGET http://172.27.35.35:5000/v2/nginx/manifests/latest
+   
+   <<<<<<<<<<<<<<< kubectl >>>>>>>>>>>
+   curl http://localhost:8080/api/v1/nodes
+   kubectl get nodes
+   kubectl logs nginx
+   kubecfg
+   
+
+Reference:
+Kubenetes bin files: https://github.com/GoogleCloudPlatform/kubernetes/releases
+Install docker on ubuntu: https://docs.docker.com/engine/installation/ubuntulinux/
+docker-registry configuration: https://github.com/docker/docker-registry
+Running Kubernetes locally via Docker: http://kubernetes.io/v1.1/docs/getting-started-guides/docker.html
+build kubernetes from github: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-kubernetes-on-top-of-a-coreos-cluster
+examples of running kubernetes and service: http://kamalmarhubi.com/blog/2015/09/06/kubernetes-from-the-ground-up-the-api-server/
+kubernetes network analysis: http://www.dasblinkenlichten.com/kubernetes-101-networking/
+
+-------------------------------------------------error fix -----------------------------------------------------------------------
+- Failed to create pod infra container: image pull failed for gcr.io/google_containers/pause:0.8.0
+
+	workaround(https://github.com/kubernetes/kubernetes/issues/6888):
+	docker pull docker.io/kubernetes/pause
+	docker tag kubernetes/pause gcr.io/google_containers/pause:0.8.0
+	or:
+	kubelet --api-servers=127.0.0.1:8080 --pod-infra-container-image="docker.io/kubernetes/pause"
+
+- Error response from daemon: unable to ping registry endpoint https://172.27.35.35:5000/v0/
+  v2 ping attempt failed with error: Get https://172.27.35.35:5000/v2/: tls: oversized record received with length 20527
+  v1 ping attempt failed with error: Get https://172.27.35.35:5000/v1/_ping: tls: oversized record received with length 20527	
+  workaround(https://docs.docker.com/registry/insecure/):
+  edit /etc/default/docker:
+  DOCKER_OPTS="--insecure-registry 172.27.35.35:5000"
+  
+----------------------------------------------后续待解决问题点----------------------------------------------------------------------
+- 如何按租户来创建docker-registry
+
+- 
+
