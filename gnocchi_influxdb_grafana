@@ -166,6 +166,8 @@ Query:
 - {"=":{"display_name": "test1"} }
 - {"or":[ {"=":{"host": "52dbd17439422cf3a30b5916fbb1388a56bbad45f14b58fde72ced26"} }, {"=":{"host": "fc3c4b0ff2873dc44ecc29dd1487f0683200bb2639c3ea3c7d4f73c7"} }]}  
 
+## gnocchi client query example
+gnocchi resource search -t instance --query "project_id=d672b5f68ca34fde96fef5dc37af3bcc"
 
 ## issues list
 - server return 500 error(server overhead) when exec "gnocchi resource search --type instance --query "display_name=test1"
