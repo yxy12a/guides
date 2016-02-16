@@ -72,7 +72,7 @@
    <<<<<<<<<<<<<<< etcd >>>>>>>>>>>>>>
    etcdctl ls / --recursive
    
-   
+   etcdctl installation note: https://github.com/coreos/etcd/releases
    <<<<<<<<<<<<<<< docker >>>>>>>>>>>>
    docker exec -it  container_id  sh
    docker cp /opt/bin kube_master:/usr/local/bin
