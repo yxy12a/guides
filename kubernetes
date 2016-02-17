@@ -25,7 +25,8 @@
    wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kube-controller-manager
    wget https://storage.googleapis.com/kubernetes-release/release/v1.0.3/bin/linux/amd64/kube-scheduler
    chmod +x *
-   kube-apiserver --etcd-servers=http://127.0.0.1:4001 --service-cluster-ip-range=10.9.0.0/16 
+   # kube-apiserver --etcd-servers=http://127.0.0.1:4001 --service-cluster-ip-range=10.9.0.0/16
+   kube-apiserver --etcd-servers=http://127.0.0.1:4001 --service-cluster-ip-range=10.9.0.0/16 --insecure-bind-address=0.0.0.0 &
    kube-controller-manager --address=0.0.0.0 --master=127.0.0.1:8080
    kube-scheduler --address=0.0.0.0 --master=127.0.0.1:8080
     
