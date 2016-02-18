@@ -119,7 +119,8 @@ kubernetes network analysis: http://www.dasblinkenlichten.com/kubernetes-101-net
   workaround(https://docs.docker.com/registry/insecure/):
   edit /etc/default/docker:
   DOCKER_OPTS="--insecure-registry 172.27.35.35:5000"
-  
+---------------------------------------------- 使用ubuntu deb安装 ------------------------------------------------------------------
+https://github.com/glove747/kubernetes/wiki/deploy-kubernetes
 ----------------------------------------------后续待解决问题点----------------------------------------------------------------------
 - 如何按租户来创建docker-registry
 
