@@ -94,6 +94,14 @@
    kubectl logs nginx
    kubecfg
    
+注：如果需要使用flannel作为kubernetes的网络驱动，需要执行如下步骤：
+   - 在minion上安装flannel:
+     yum install flannel -y
+     # cat /etc/sysconfig/flannel
+     FLANNEL_ETCD="http://10.10.2.120:4001"
+     FLANNEL_ETCD_KEY="/coreos.com/network"
+     参考：http://ju.outofmemory.cn/entry/205002
+   - 修改kubelet启动参数中"--network-plugin"参数
 
 Reference:
 Kubenetes bin files: https://github.com/GoogleCloudPlatform/kubernetes/releases
