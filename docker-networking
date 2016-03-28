@@ -1,1 +1,22 @@
 ## docker multi-host networking installation and configuration
+# create consul service
+sudo apt-get install -y unzip curl
+cd /tmp/
+wget https://dl.bintray.com/mitchellh/consul/0.5.2_linux_amd64.zip -O consul.zip
+unzip consul.zip
+mv consul /usr/local/bin
+chmod +x /usr/local/bin/consul
+wget https://dl.bintray.com/mitchellh/consul/0.5.2_web_ui.zip -O dist.zip
+unzip dist.zip
+mkdir –p /home/consul
+mv dist /home/consul/
+mkdir –p /data/consul
+
+# start consul
+consul agent -server -bootstrap-expect 1 -data-dir /data/consul -ui-dir /home/consul/dist -bind=192.168.1.43 -client 0.0.0.0
+Note:
+  - UI默认地址是http://localhost:8500/ui
+  - 如果UI没有启动，需要添加额外的-client 0.0.0.0参数重启Consult代理。
+
+# config docker to use consul for network: /etc/default/docker
+DOCKER_OPTS="--cluster-store consul://10.10.126.101:8500/network"
