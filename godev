@@ -1,0 +1,11 @@
+# go 开发环境搭建
+
+# 解决GFW无法下载websocket问题
+git clone https://github.com/golang/net.git
+cd $GOPATH
+mkdir -p src/golang.org/x/net/
+cp -r ~/net/websocket/  src/golang.org/x/net/websocket
+
+# 搭建revel开发环境
+go get github.com/revel/revel
+go get github.com/revel/cmd/revel
