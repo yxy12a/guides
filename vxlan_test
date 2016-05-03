@@ -9,12 +9,44 @@
   vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11
   throughput: 9.34 Gbits/sec
 
-- case 3: vxlan performance
+- case 3: vxlan performance without csum flag(tunnel created on vlan11)
   Node72: 
-
-
+    ovs-vsctl add-br br-tun
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73
+  
   Node73: 
+    ovs-vsctl add-br br-tun
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.72
   
+  throughput: 
+    
+- case 4:  vxlan performance with csum flag 
+
   
+############################# env setup ###################################  
 # install openvswitch 2.4
 apt-get install openvswitch-switch  
+
+# install qemu-kvm
+apt-get install qemu-kvm libvirt-bin virt-manager
+
+# download ubuntu1404.3.img from 172.27.33.4: /data/glove/
+scp 172.27.33.4:/data/glove/ubuntu1404.3.img /data
+# insert file to image
+apt-get install libguestfs-tools
+update-guestfs-appliance
+guestmount -a /home/ubuntu1404.3.img -i --rw /mnt
+cp /usr/bin/iperf3 /mnt/usr/bin
+cp /usr/lib/x86_64-linux-gnu/libiperf.so.0.0.0 /mnt/usr/lib/x86_64-linux-gnu
+Note: refer to http://docs.openstack.org/zh_CN/image-guide/content/ch_modifying_images.html
+
+# start a vm
+  cd /etc/libvirt/qemu/
+  vi test2.xml 
+  virsh define test2.xml 
+  virsh start test2
+
+
+
+
+
