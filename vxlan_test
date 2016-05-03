@@ -1,0 +1,9 @@
+# test the vxlan performance on Ubuntu 14.04.4 (Kernel 4.2.0-27)
+# NIC: Intel Corporation Ethernet Controller 10-Gigabit X540-AT2 (rev 01)
+# Node72 and Node73 with 10G NIC (p3p1)
+case 1: vlan performance
+  vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11
+  throughput: 9.34 Gbits/sec
+
+case 2: 
+  
