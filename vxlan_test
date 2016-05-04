@@ -18,7 +18,7 @@
     ovs-ofctl add-flow br-tun priority=5,in_port=7,actions=set_tunnel:5566,output:8
     ovs-ofctl add-flow br-tun priority=5,in_port=8,tun_id=5566,actions=output:7
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
-  Note:  "options:out_key=flow" should be added to make the vni effect
+  Note:  "options:out_key=flow options:in_key=flow" should be added to make the vni effect
   
   Node73: 
     ovs-vsctl add-br br-tun
