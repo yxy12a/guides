@@ -5,7 +5,7 @@
   p3p1(Node72)  <--> p3p1(Node 73)
   throughput: 
   
-- case 2: vlan performance
+- case 2: Host vlan performance
   vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11
   throughput: 9.34 Gbits/sec
 
@@ -13,15 +13,48 @@
   Node72: 
     ovs-vsctl add-br br-tun
     ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73
+    ovs-ofctl show br-tun
+    ovs-ofctl del-flows br-tun
+    ovs-ofctl add-flow br-tun priority=5,in_port=5,actions=set_tunnel:5566,output:1
+    ovs-ofctl add-flow br-tun priority=5,in_port=1,tun_id=0,actions=output:5
+    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
   
   Node73: 
     ovs-vsctl add-br br-tun
     ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.72
-  
-  throughput: 
+    ovs-ofctl show br-tun
+    ovs-ofctl del-flows br-tun
+    ovs-ofctl add-flow br-tun priority=5,in_port=3,actions=set_tunnel:5566,output:1
+    ovs-ofctl add-flow br-tun priority=5,in_port=1,tun_id=0,actions=output:3
+    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
     
-- case 4:  vxlan performance with csum flag 
+  throughput: 4.02 Gbits/sec
+  
+- case 4:  vxlan performance with csum flag (tunnel created on vlan11)
+  Node72: 
+    ovs-vsctl add-br br-tun
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:csum=true
+    ovs-ofctl show br-tun
+    ovs-ofctl del-flows br-tun
+    ovs-ofctl add-flow br-tun priority=5,in_port=5,actions=set_tunnel:5566,output:1
+    ovs-ofctl add-flow br-tun priority=5,in_port=1,tun_id=0,actions=output:5
+    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
+  
+  Node73: 
+    ovs-vsctl add-br br-tun
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.72 options:csum=true
+    ovs-ofctl show br-tun
+    ovs-ofctl del-flows br-tun
+    ovs-ofctl add-flow br-tun priority=5,in_port=3,actions=set_tunnel:5566,output:4
+    ovs-ofctl add-flow br-tun priority=5,in_port=4,tun_id=0,actions=output:3
+    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
+  throughput:  5.06 Gbits/sec
+  
+- case 5: vxlan performance with csum flag and gro off (tunnel created on vlan11)
+  throughput:  5.39 Gbits/sec
 
+  
+  
   
 ############################# env setup ###################################  
 # install openvswitch 2.4
@@ -35,7 +68,7 @@ scp 172.27.33.4:/data/glove/ubuntu1404.3.img /data
 # insert file to image
 apt-get install libguestfs-tools
 update-guestfs-appliance
-guestmount -a /home/ubuntu1404.3.img -i --rw /mnt
+guestmount -a /data/ubuntu1404.3.img -i --rw /mnt
 cp /usr/bin/iperf3 /mnt/usr/bin
 cp /usr/lib/x86_64-linux-gnu/libiperf.so.0.0.0 /mnt/usr/lib/x86_64-linux-gnu
 Note: refer to http://docs.openstack.org/zh_CN/image-guide/content/ch_modifying_images.html
@@ -45,6 +78,7 @@ Note: refer to http://docs.openstack.org/zh_CN/image-guide/content/ch_modifying_
   vi test2.xml 
   virsh define test2.xml 
   virsh start test2
+
 
 
 
