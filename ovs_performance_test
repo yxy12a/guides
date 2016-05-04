@@ -71,9 +71,9 @@
 - case 6: vxlan performance with csum flag and gro off (tunnel created on vlan11)
   throughput:  5.39 Gbits/sec
 
+########################## using network namespace to test ################ 
   
-  
-  
+Reference: https://gist.github.com/djoreilly/1cf74c684cf03da06ea6   
 ############################# env setup ###################################  
 # install openvswitch 2.4
 apt-get install openvswitch-switch  
