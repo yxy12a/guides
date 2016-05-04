@@ -9,7 +9,24 @@
   vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11
   throughput: 9.34 Gbits/sec
 
-- case 3: vxlan performance without csum flag(tunnel created on vlan11)
+- case 3: vm vlan performance
+  vm1 <--> br-tun <--> vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11 <--> br-tun <--> vm2
+  Node72:
+    ovs-vsctl add-port br-tun vlan11 type=internal
+    ovs-ofctl show br-tun
+    ovs-ofctl add-flow br-tun priority=5,in_port=7,actions=output:10
+    ovs-ofctl add-flow br-tun priority=5,in_port=10,actions=output:7
+    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
+    
+  Node73:
+    ovs-vsctl add-port br-tun vlan11
+    ovs-ofctl show br-tun
+    ovs-ofctl add-flow br-tun priority=5,in_port=5,actions=output:8
+    ovs-ofctl add-flow br-tun priority=5,in_port=8,actions=output:5
+    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
+  throughput: 
+   
+- case 4: vxlan performance without csum flag(tunnel created on vlan11)
   Node72: 
     ovs-vsctl add-br br-tun
     ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:out_key=flow options:in_key=flow
@@ -31,7 +48,7 @@
     
   throughput: 4.02 Gbits/sec
   
-- case 4:  vxlan performance with csum flag (tunnel created on vlan11)
+- case 5:  vxlan performance with csum flag (tunnel created on vlan11)
   Node72: 
     ovs-vsctl add-br br-tun
     ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:csum=true options:out_key=flow options:in_key=flow
@@ -51,7 +68,7 @@
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
   throughput:  5.06 Gbits/sec
   
-- case 5: vxlan performance with csum flag and gro off (tunnel created on vlan11)
+- case 6: vxlan performance with csum flag and gro off (tunnel created on vlan11)
   throughput:  5.39 Gbits/sec
 
   
