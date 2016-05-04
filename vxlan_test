@@ -12,20 +12,21 @@
 - case 3: vxlan performance without csum flag(tunnel created on vlan11)
   Node72: 
     ovs-vsctl add-br br-tun
-    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:out_key=flow options:in_key=flow
     ovs-ofctl show br-tun
     ovs-ofctl del-flows br-tun
-    ovs-ofctl add-flow br-tun priority=5,in_port=5,actions=set_tunnel:5566,output:1
-    ovs-ofctl add-flow br-tun priority=5,in_port=1,tun_id=0,actions=output:5
+    ovs-ofctl add-flow br-tun priority=5,in_port=7,actions=set_tunnel:5566,output:8
+    ovs-ofctl add-flow br-tun priority=5,in_port=8,tun_id=5566,actions=output:7
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
+  Note:  "options:out_key=flow" should be added to make the vni effect
   
   Node73: 
     ovs-vsctl add-br br-tun
-    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.72
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.72 options:out_key=flow options:in_key=flow
     ovs-ofctl show br-tun
     ovs-ofctl del-flows br-tun
-    ovs-ofctl add-flow br-tun priority=5,in_port=3,actions=set_tunnel:5566,output:1
-    ovs-ofctl add-flow br-tun priority=5,in_port=1,tun_id=0,actions=output:3
+    ovs-ofctl add-flow br-tun priority=5,in_port=5,actions=set_tunnel:5566,output:6
+    ovs-ofctl add-flow br-tun priority=5,in_port=6,tun_id=5566,actions=output:5
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
     
   throughput: 4.02 Gbits/sec
@@ -33,20 +34,20 @@
 - case 4:  vxlan performance with csum flag (tunnel created on vlan11)
   Node72: 
     ovs-vsctl add-br br-tun
-    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:csum=true
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:csum=true options:out_key=flow options:in_key=flow
     ovs-ofctl show br-tun
     ovs-ofctl del-flows br-tun
     ovs-ofctl add-flow br-tun priority=5,in_port=5,actions=set_tunnel:5566,output:1
-    ovs-ofctl add-flow br-tun priority=5,in_port=1,tun_id=0,actions=output:5
+    ovs-ofctl add-flow br-tun priority=5,in_port=1,tun_id=5566,actions=output:5
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
   
   Node73: 
     ovs-vsctl add-br br-tun
-    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.72 options:csum=true
+    ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.72 options:csum=true options:out_key=flow options:in_key=flow
     ovs-ofctl show br-tun
     ovs-ofctl del-flows br-tun
     ovs-ofctl add-flow br-tun priority=5,in_port=3,actions=set_tunnel:5566,output:4
-    ovs-ofctl add-flow br-tun priority=5,in_port=4,tun_id=0,actions=output:3
+    ovs-ofctl add-flow br-tun priority=5,in_port=4,tun_id=5566,actions=output:3
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
   throughput:  5.06 Gbits/sec
   
