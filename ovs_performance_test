@@ -1,32 +1,43 @@
-# test the ovs performance on Ubuntu 14.04.4 (Kernel 4.2.0-27)
+# Test the ovs performance on Ubuntu 14.04.4 (Kernel 4.2.0-27)
 # NIC: Intel Corporation Ethernet Controller 10-Gigabit X540-AT2 (rev 01)
 # Node72 and Node73 with 10G NIC (p3p1)
-- case 1: raw device performance
+- Case 1: Raw device performance
   p3p1(Node72)  <--> p3p1(Node 73)
-  throughput: 
   
-- case 2: Host vlan performance
+  Throughput: 
+  
+- Case 2: Host vlan performance
   vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11
   throughput: 9.34 Gbits/sec
 
-- case 3: vm vlan performance
+- Case 3: vm vlan performance using one bridge
   vm1 <--> br-tun <--> vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11 <--> br-tun <--> vm2
   Node72:
-    ovs-vsctl add-port br-tun vlan11 type=internal
-    ovs-ofctl show br-tun
-    ovs-ofctl add-flow br-tun priority=5,in_port=7,actions=output:10
-    ovs-ofctl add-flow br-tun priority=5,in_port=10,actions=output:7
-    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
+    ovs-vsctl add-br br-tun
+    ovs-vsctl add-port br-tun vlan11
+
+  Node73:
+    ovs-vsctl add-br br-tun
+    ovs-vsctl add-port br-tun vlan11
+    
+  Throughput: 9.32 Gbits/sec
+  Note: Make sure that you define different mac for vms in test2.xml 
+  
+- Case 4: vm vlan performance using two bridge
+  vm1 <--> br-int <--> <br-tun> <--> vlan11 <--> p3p1(Node72) <--> p3p1(Node73) <--> vlan 11 <--> br-tun  <--> br-int <--> vm1
+  Node72:
+    ovs-vsctl add-port br-tun vlan11
+    ovs-vsctl add-port br-int br-int-tun -- set interface br-int-tun type=patch options:peer=br-tun-int
+    ovs-vsctl add-port br-tun br-tun-int -- set interface br-tun-int type=patch options:peer=br-int-tun
     
   Node73:
     ovs-vsctl add-port br-tun vlan11
-    ovs-ofctl show br-tun
-    ovs-ofctl add-flow br-tun priority=5,in_port=5,actions=output:8
-    ovs-ofctl add-flow br-tun priority=5,in_port=8,actions=output:5
-    ovs-ofctl add-flow br-tun priority=0,action=NORMAL
-  throughput: 
+    ovs-vsctl add-port br-int br-int-tun -- set interface br-int-tun type=patch options:peer=br-tun-int
+    ovs-vsctl add-port br-tun br-tun-int -- set interface br-tun-int type=patch options:peer=br-int-tun 
+    
+  Throughput: 9.34 Gbits/sec
    
-- case 4: vxlan performance without csum flag(tunnel created on vlan11)
+- Case 5: vxlan performance without csum flag(tunnel created on vlan11)
   Node72: 
     ovs-vsctl add-br br-tun
     ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:out_key=flow options:in_key=flow
@@ -46,9 +57,9 @@
     ovs-ofctl add-flow br-tun priority=5,in_port=6,tun_id=5566,actions=output:5
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
     
-  throughput: 4.02 Gbits/sec
+  Throughput: 4.02 Gbits/sec
   
-- case 5:  vxlan performance with csum flag (tunnel created on vlan11)
+- Case 5:  vxlan performance with csum flag (tunnel created on vlan11)
   Node72: 
     ovs-vsctl add-br br-tun
     ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:csum=true options:out_key=flow options:in_key=flow
@@ -66,9 +77,9 @@
     ovs-ofctl add-flow br-tun priority=5,in_port=3,actions=set_tunnel:5566,output:4
     ovs-ofctl add-flow br-tun priority=5,in_port=4,tun_id=5566,actions=output:3
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
-  throughput:  5.06 Gbits/sec
+  Throughput:  5.06 Gbits/sec
   
-- case 6: vxlan performance with csum flag and gro off (tunnel created on vlan11)
+- Case 6: vxlan performance with csum flag and gro off (tunnel created on vlan11)
   throughput:  5.39 Gbits/sec
 
 ########################## using network namespace to test ################ 
