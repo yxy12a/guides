@@ -59,7 +59,7 @@
     
   Throughput: 4.02 Gbits/sec
   
-- Case 5:  vxlan performance with csum flag (tunnel created on vlan11)
+- Case 6:  vxlan performance with csum flag (tunnel created on vlan11)
   Node72: 
     ovs-vsctl add-br br-tun
     ovs-vsctl add-port br-tun vxlan1 -- set Interface vxlan1 type=vxlan options:remote_ip=172.27.33.73 options:csum=true options:out_key=flow options:in_key=flow
@@ -79,8 +79,14 @@
     ovs-ofctl add-flow br-tun priority=0,action=NORMAL
   Throughput:  5.06 Gbits/sec
   
-- Case 6: vxlan performance with csum flag and gro off (tunnel created on vlan11)
-  throughput:  5.39 Gbits/sec
+- Case 7: vxlan performance with csum flag and gro off (tunnel created on vlan11)
+  Throughput:  5.39 Gbits/sec
+  
+- Case 8: vxlan performance without csum flan (tunnel created on vlan11 on bond6)  
+  Throughput: 3.71 Gbits/sec
+  
+- Case 9: vxlan performance with csum flag and gro off (tunnel created on vlan11 on bond6)
+  Throughput: 5.06 Gbits/sec
 
 ########################## using network namespace to test ################ 
   
