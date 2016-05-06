@@ -82,11 +82,14 @@
 - Case 7: vxlan performance with csum flag and gro off (tunnel created on vlan11)
   Throughput:  5.39 Gbits/sec
   
-- Case 8: vxlan performance without csum flan (tunnel created on vlan11 on bond6)  
-  Throughput: 3.71 Gbits/sec
-  
-- Case 9: vxlan performance with csum flag and gro off (tunnel created on vlan11 on bond6)
-  Throughput: 5.06 Gbits/sec
+- Case 8: vxlan performance without csum flag (tunnel created on vlan11 on bond6)  
+  Throughput: 3.71 Gbits/sec (Kernel 4.2.0-27)
+              3.93 Gbits/sec (kernle 3.16.0-39-generic)
+              
+- Case 9: vxlan performance with csum flag (tunnel created on vlan11 on bond6)
+  Throughput: 5.06 Gbits/sec (Kernel 4.2.0-27)
+              4.07 Gbits/sec(kernle 3.16.0-39-generic)
+              
 
 ########################## using network namespace to test ################ 
   
