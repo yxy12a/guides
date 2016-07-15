@@ -16,7 +16,7 @@
    
 3. install and run etcd
    docker pull ipolyzos/etcd
-   docker run --net=host -d ipolyzos/etcd:latest /go/bin/etcd --addr=127.0.0.1:4001 --bind-addr=0.0.0.0:4001 --data-dir=/var/etcd/data
+   docker run --net=host -d ipolyzos/etcd:latest /go/bin/etcd --addr=0.0.0.0:4001 --bind-addr=0.0.0.0:4001 --data-dir=/var/etcd/data --restart=yes
 
 
 4. install and run the kubernetes master
