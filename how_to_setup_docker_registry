@@ -6,3 +6,12 @@
    eg:
       OPTIONS="-g /opt/scs/docker --insecure-registry 10.11.150.76:6000"
       
+<<<<<<<<<<<<<<<<< docker registry backend storage >>>>>>>>>>>>>>>>>>>>>>
+- ceph swift
+    
+
+- 
+
+
+Reference:
+- 
