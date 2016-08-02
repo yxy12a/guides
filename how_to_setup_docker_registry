@@ -1,0 +1,8 @@
+1.docker run -d -p 5000:5000 --net=host --restart=always --name registry registry
+   
+  Note: images are stored in /var/lib/registry/docker/registry/v2/repositories
+  
+2. config docker deamon to connect to the private registry via /etc/sysconfig/docker
+   eg:
+      OPTIONS="-g /opt/scs/docker --insecure-registry 10.11.150.76:6000"
+      
