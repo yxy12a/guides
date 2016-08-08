@@ -32,7 +32,8 @@
   docker search docker-registry:5000/ubuntu
 - list image tags: 
   curl 192.168.99.50:5000/v2/ubuntu/tags/list
-
+- retrieve image info:
+  curl -X GET docker-registry:5000/v2/ubuntu/manifests/sha256:943f68d2e9dddac80d25ac676785fd359681058ec160a7c64816f083525ec119
 
 Reference:
 - Deploying a registry server: https://docs.docker.com/registry/deploying/
