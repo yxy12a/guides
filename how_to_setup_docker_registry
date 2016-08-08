@@ -20,7 +20,7 @@
 - pull images from local docker registry:
   docker pull docker-registry:5000/alpine
 - tag images:
-  docker tag alpine:latest docke-registry:5000/alpine:latest
+  docker tag alpine:latest docker-registry:5000/alpine:latest
 - push images to local docker registry:
   docker push docker-registry:5000/alpine:latest  
 - search images from local registry:
