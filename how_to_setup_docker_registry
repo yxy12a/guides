@@ -28,4 +28,5 @@
 - 
 
 Reference:
+- Deploying a registry server: https://docs.docker.com/registry/deploying/
 - Registry V2使用配置： http://blog.csdn.net/cuisongliu/article/details/50935288
