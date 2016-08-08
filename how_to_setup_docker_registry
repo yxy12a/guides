@@ -25,6 +25,7 @@
   docker push docker-registry:5000/alpine:latest  
 - search images from local registry:
   docker search docker-registry:5000/alpine
+- 
 
 Reference:
-- 
+- Registry V2使用配置： http://blog.csdn.net/cuisongliu/article/details/50935288
