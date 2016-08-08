@@ -4,7 +4,7 @@
   
 2. config docker deamon to connect to the private registry via /etc/sysconfig/docker
    eg:
-      OPTIONS="-g /opt/scs/docker --insecure-registry 10.11.150.76:6000"
+      OPTIONS="-g /opt/scs/docker --insecure-registry 10.11.150.76:5000"
       
 <<<<<<<<<<<<<<<<< docker registry backend storage >>>>>>>>>>>>>>>>>>>>>>
 - ceph swift
@@ -12,6 +12,15 @@
 
 - 
 
+<<<<<<<<<<< how to use local docker registry to push/pull images >>>>>>>>
+- pull images from local docker registry:
+  docker pull localhost:5000/alpine
+- tag images:
+  docker tag alpine:latest localhost:5000/alpine:latest
+- push images to local docker registry:
+  docker push localhost:5000/alpine:latest  
+- search images from local registry:
+  docker search localhost:5000/alpine
 
 Reference:
 - 
