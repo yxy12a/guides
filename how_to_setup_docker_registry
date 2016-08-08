@@ -30,7 +30,8 @@
   docker push docker-registry:5000/ubuntu:14.04  
 - search images from local registry:
   docker search docker-registry:5000/ubuntu
-- 
+- list image tags: 
+  curl 192.168.99.50:5000/v2/ubuntu/tags/list
 
 
 Reference:
