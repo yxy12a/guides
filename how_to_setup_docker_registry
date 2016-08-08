@@ -14,7 +14,11 @@
    centos: /etc/sysconfig/docker
            OPTIONS="-g /opt/scs/docker --insecure-registry docker-registry:5000"
    Note: add docker-registry to /etc/hosts
-   
+ 
+3. for different user, the repositories can like this:
+   docker-registry:5000/tenant-a/ubuntu:14.04
+   docker-registry:5000/tenant-b/ubuntu:14.04
+
 <<<<<<<<<<<<<<<<< docker registry backend storage >>>>>>>>>>>>>>>>>>>>>>
 - ceph swift
     
