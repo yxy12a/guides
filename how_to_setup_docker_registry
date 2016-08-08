@@ -1,4 +1,4 @@
-1.docker run -d -p 5000:5000 --net=host --restart=always --name docker-registry registry
+1.docker run -d -p 5000:5000 --net=host --restart=always --name docker-registry registry:2
    
   Note: images are stored in /var/lib/registry/docker/registry/v2/repositories
   
@@ -9,7 +9,8 @@
            
    centos: /etc/sysconfig/docker
            OPTIONS="-g /opt/scs/docker --insecure-registry docker-registry:5000"
-      
+   Note: add docker-registry to /etc/hosts
+   
 <<<<<<<<<<<<<<<<< docker registry backend storage >>>>>>>>>>>>>>>>>>>>>>
 - ceph swift
     
@@ -18,14 +19,15 @@
 
 <<<<<<<<<<< how to use local docker registry to push/pull images >>>>>>>>
 - pull images from local docker registry:
-  docker pull docker-registry:5000/alpine
+  docker pull docker-registry:5000/ubuntu
 - tag images:
-  docker tag alpine:latest docker-registry:5000/alpine:latest
+  docker tag alpine:latest docker-registry:5000/ubuntu:latest
 - push images to local docker registry:
-  docker push docker-registry:5000/alpine:latest  
+  docker push docker-registry:5000/ubuntu:latest  
 - search images from local registry:
-  docker search docker-registry:5000/alpine
+  docker search docker-registry:5000/ubuntu
 - 
+
 
 Reference:
 - Deploying a registry server: https://docs.docker.com/registry/deploying/
