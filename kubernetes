@@ -86,7 +86,7 @@
    docker tag nginx 172.27.35.35:5000/nginx
    docker push 172.27.35.35:5000/nginx
    curl http://172.27.35.35:5000/v1/search?
-   curl -XGET http://172.27.35.35:5000/v2/nginx/manifests/latest
+   curl -X GET http://172.27.35.35:5000/v2/nginx/manifests/latest
    
    <<<<<<<<<<<<<<< kubectl >>>>>>>>>>>
    curl http://localhost:8080/api/v1/nodes
