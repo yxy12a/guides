@@ -2,9 +2,13 @@
    
   Note: images are stored in /var/lib/registry/docker/registry/v2/repositories
   
-2. config docker deamon to connect to the private registry via /etc/sysconfig/docker
+2. config docker deamon to connect to the private registry via 
    eg:
-      OPTIONS="-g /opt/scs/docker --insecure-registry 10.11.150.76:5000"
+   ubuntu: /etc/default/docker
+           DOCKER_OPTS="--insecure-registry docker-registry:5000"
+           
+   centos: /etc/sysconfig/docker
+           OPTIONS="-g /opt/scs/docker --insecure-registry docker-registry:5000"
       
 <<<<<<<<<<<<<<<<< docker registry backend storage >>>>>>>>>>>>>>>>>>>>>>
 - ceph swift
