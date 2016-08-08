@@ -42,3 +42,5 @@
 Reference:
 - Deploying a registry server: https://docs.docker.com/registry/deploying/
 - Registry V2使用配置： http://blog.csdn.net/cuisongliu/article/details/50935288
+- retrive image list from registry v2: https://github.com/BradleyA/Search-docker-registry-v2-script.1.0
+
