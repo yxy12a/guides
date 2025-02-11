@@ -1,4 +1,9 @@
-#install ollama
+#安装ollama
 curl -fsSL https://ollama.com/install.sh | sh
+#启动ollama
+systemctl start ollama
+systemctl enable ollama
 # 查看版本
 ollama -v
+#部署DeepSeek推理模型
+ollama run deepseek-r1:7b
