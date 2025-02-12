@@ -3,7 +3,73 @@ curl -fsSL https://ollama.com/install.sh | sh
 #启动ollama
 systemctl start ollama
 systemctl enable ollama
+systemctl stop ollama
+#修改监听IP地址
+sudo mkdir /path/to/ollama/models
+sudo chown -R 777 /path/to/ollama/models
+sudo vi /etc/systemd/system/ollama.service
+增加：
+Environment="OLLAMA_MODELS=/path/to/ollama/models" 
+Environment="OLLAMA_HOST=0.0.0.0:11434"
+systemctl daemon-reload
+#查看服务错误原因
+journalctl -u ollama
 # 查看版本
 ollama -v
 #部署DeepSeek推理模型
 ollama run deepseek-r1:7b
+#ollama访问地址
+http://172.16.248.129:11434/
+#ollama 查看本地模型列表
+ollama ls
+#ollama 查看模型信息
+ollama show deepseek-r1:7b
+#ollama查看当前正在运行的模型
+ollama ps
+
+----------------------------------------------
+# 检查docker compose版本
+docker compose version 
+#安装dify
+git clone https://github.com/langgenius/dify.git
+cd dify/docker
+cp .env.example .env
+docker compose up -d
+----------------------------------------------
+# 安装openweb ui
+docker run -d -p 0.0.0.0:3000:8080 -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+http://172.16.248.130:3000
+登录后，进入 Admin Settings，导航到 Connections > Ollama > Manage
+
+----------------------------------------------
+host name: node-deepseek
+user: yxy
+pwd: pt05
+#ssh 免密登录设置
+ssh-keygen -t rsa -b 4096 -C "22904500@qq.com"
+#生成完后拷贝到远程服务器
+ssh-copy-id yxy@172.16.248.129
+#远程服务器设置/etc/ssh/sshd_config
+PubkeyAuthentication yes
+-----------------------------------------------
+#Docker镜像加速
+#常用的镜像加速器地址：
+https://docker.m.daocloud.io
+https://hub-mirror.c.163.com
+https://mirror.baidubce.com
+https://docker.mirrors.ustc.edu.cn
+#编辑 Docker 配置文件 /etc/docker/daemon.json  (/var/snap/docker/2974/config/daemon.json)
+{
+  "registry-mirrors": [
+    "https://docker.m.daocloud.io",
+    "https://hub-mirror.c.163.com",
+    "https://mirror.baidubce.com",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://hub-mirror.c.163.com",
+    "https://mirror.aliyuncs.com"
+  ]
+}
+sudo snap restart docker
+
+#验证配置是否生效
+docker info
