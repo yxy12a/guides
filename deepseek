@@ -1,3 +1,9 @@
+----------------------
+访问入口：
+ollama：http://172.16.248.129:11434/
+openweb ui：http://172.16.248.130:3000/
+dify：http://172.16.248.130/
+----------------------
 #安装ollama
 curl -fsSL https://ollama.com/install.sh | sh
 #启动ollama
