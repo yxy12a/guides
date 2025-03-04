@@ -1,0 +1,9 @@
+# 准备docker运行环境
+
+
+
+
+#准备dify软件包
+git clone https://github.com/langgenius/dify.git
+或者
+wget https://github.com/langgenius/dify/archive/refs/heads/main.zip
