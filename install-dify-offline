@@ -1,5 +1,18 @@
 # 准备docker运行环境
-
+# Ubuntu 22.04
+wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce_27.5.1-1~ubuntu.22.04~jammy_amd64.deb
+wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce-cli_27.5.1-1~ubuntu.22.04~jammy_amd64.deb
+wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/containerd.io_1.7.25-1_amd64.deb
+wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-compose-plugin_2.6.0~ubuntu-jammy_amd64.deb
+#在目标服务器上，进入存放 .deb 文件的目录，依次安装 Docker CE、Docker CE CLI 和 containerd.io
+sudo dpkg -i containerd.io_1.7.25-1_amd64.deb
+sudo dpkg -i docker-ce-cli_27.5.1-1~ubuntu.22.04~jammy_amd64.deb
+sudo dpkg -i docker-ce_27.5.1-1~ubuntu.22.04~jammy_amd64.deb
+#配置 Docker 服务
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo docker -v
+sudo dpkg -i docker-compose-plugin_2.6.0~ubuntu-jammy_amd64.deb
 
 
 
@@ -7,3 +20,24 @@
 git clone https://github.com/langgenius/dify.git
 或者
 wget https://github.com/langgenius/dify/archive/refs/heads/main.zip
+cd dify/docker
+docker-compose up -d
+#保存docker镜像到本地
+docker save langgenius/dify-web:0.15.3 langgenius/dify-api:0.15.3 nginx:latest postgres:15-alpine redis:6-alpine langgenius/dify-sandbox:0.2.10 ubuntu/squid:latest semitechnologies/weaviate:1.19.0 | gzip > dify-images.tar.gz
+#传输文件到离线服务器
+将下载好的 Dify 源码和 dify-images.tar.gz 文件传输到离线服务器上
+#离线安装
+#加载 Docker 镜像
+gunzip -c dify-images.tar.gz | docker load
+#配置环境变量
+bash
+cp .env.example .env
+编辑 .env 文件
+#启动 Dify
+docker-compose up -d
+
+
+
+
+
+
