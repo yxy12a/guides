@@ -14,15 +14,61 @@ sudo systemctl enable docker
 sudo docker -v
 sudo dpkg -i docker-compose-plugin_2.6.0~ubuntu-jammy_amd64.deb
 
+###############################################################
+#ubuntu 20.04 install docker and docker compose
+wget https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/containerd.io_1.6.12-1_amd64.deb
+wget https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb
+wget https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
+sudo dpkg -i containerd.io_1.6.12-1_amd64.deb docker-ce-cli_20.10.21~3-0~ubuntu-focal_amd64.deb docker-ce_20.10.21~3-0~ubuntu-focal_amd64.deb
+sudo service docker start
+sudo docker -v
+sudo curl -L https://github.com/docker/compose/releases/download/1.20.1/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo mv docker-compose-v2.29.3-linux-x86_64 /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
-
+#配置docker镜像加速，执行以下命令
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+"registry-mirrors":[
+    "https://9cpn8tt6.mirror.aliyuncs.com",
+    "https://registry.docker-cn.com",
+    "https://mirror.ccs.tencentyun.com",
+    "https://docker.1panel.live",
+    "https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com",
+    "https://docker.m.daocloud.io",
+    "https://hub-mirror.c.163.com",
+    "https://mirror.baidubce.com",
+    "https://your_preferred_mirror",
+    "https://dockerhub.icu",
+    "https://docker.registry.cyou",
+    "https://docker-cf.registry.cyou",
+    "https://dockercf.jsdelivr.fyi",
+    "https://docker.jsdelivr.fyi",
+    "https://dockertest.jsdelivr.fyi",
+    "https://mirror.aliyuncs.com",
+    "https://dockerproxy.com",
+    "https://mirror.baidubce.com",
+    "https://docker.m.daocloud.io",
+    "https://docker.nju.edu.cn",
+    "https://docker.mirrors.sjtug.sjtu.edu.cn",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://mirror.iscas.ac.cn",
+    "https://docker.rainbond.cc"
+    ]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+--------------------------------------------------------------
 #准备dify软件包
 git clone https://github.com/langgenius/dify.git
 或者
 wget https://github.com/langgenius/dify/archive/refs/heads/main.zip
 cd dify/docker
+cp .env.example .env
 docker-compose up -d
-#保存docker镜像到本地
+#保存docker镜像到本地(共8个）
 docker save langgenius/dify-web:0.15.3 langgenius/dify-api:0.15.3 nginx:latest postgres:15-alpine redis:6-alpine langgenius/dify-sandbox:0.2.10 ubuntu/squid:latest semitechnologies/weaviate:1.19.0 | gzip > dify-images.tar.gz
 #传输文件到离线服务器
 将下载好的 Dify 源码和 dify-images.tar.gz 文件传输到离线服务器上
