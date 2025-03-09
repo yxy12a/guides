@@ -85,6 +85,24 @@ cp .env.example .env
 #启动 Dify
 docker-compose up -d
 
+#docker命令
+docker rm -f $(docker ps -a -q)
+docker rmi $(docker images -q)
+
+docker rmi langgenius/dify-web:1.0.0
+
+docker build -t langgenius/dify-web:1.0.0 .
+
+
+#查看当前代码的版本
+git status
+git checkout <branch-name>：切换到指定的分支
+git checkout -b <new-branch-name>：创建并切换到一个新的分支。
+git checkout main : 切换回主分支
+
+docker build -t langgenius/dify-web:1.0.0 .
+
+
 
 
 
